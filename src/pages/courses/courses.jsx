@@ -1,6 +1,8 @@
+import { useState } from "react";
 import CoursesHeroSection from "../../component/courses/CoursesHeroSection";
-import ApiClient from "../../services/ApiClient";
-import { useEffect, useRef, useState } from "react";
+import FilterSection from "../../component/courses/FilterSection";
+import useFetchClasses from "../../hooks/useFetchClasses";
+import Pagination from "../../component/courses/Pagination";
 
 const courses = () => {
   const dummyCourses = [
@@ -39,129 +41,110 @@ const courses = () => {
     },
   ];
 
-  
+  const [capacityRange, setCapacityRange] = useState([0, 1000]);
+  const [Ordering, setOrdering] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [instructorEmail, setInstructorEmail] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { classes, loading, totalPages } = useFetchClasses(
+    currentPage,
+    instructorEmail,
+    searchQuery,
+    Ordering,
+    capacityRange
+  );
+
+  const handleCapacityChange = (index, value) => {
+    setCapacityRange((prev) => {
+      const newCapacityRange = [...prev];
+      newCapacityRange[index] = value;
+      return newCapacityRange;
+    });
+    setCurrentPage(1);
+  };
+
   return (
     <section className="bg-gray-100 py-12">
       <CoursesHeroSection />
 
       <div className="container mx-auto px-4 mt-12">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
           Explore Our Courses
         </h1>
+        <p className="text-xl text-center font-semibold text-gray-500 mb-5">
+          {" "}
+          Fitness Course
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Filters Section */}
-          <div className="md:col-span-1">
-            <div className="bg-white rounded-lg shadow p-4">
-              <h2 className="text-xl font-semibold mb-2">Filters</h2>
-              <p className="text-sm text-gray-500 mb-4">
-                Customize your course search.
-              </p>
-
-              {/* Static Search Input */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Search
-                </label>
-                <input
-                  type="text"
-                  className="w-full border rounded px-3 py-2"
-                  placeholder="Enter course name"
-                  disabled
-                />
-              </div>
-
-              {/* Static Category */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category
-                </label>
-                <select className="w-full border rounded px-3 py-2" disabled>
-                  <option>All Categories</option>
-                  <option>Yoga</option>
-                  <option>Strength</option>
-                </select>
-              </div>
-
-              {/* Level Options */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Level
-                </label>
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-2">
-                    <input type="radio" name="level" disabled />
-                    <span>All Levels</span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                    <input type="radio" name="level" disabled />
-                    <span>Beginner</span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                    <input type="radio" name="level" disabled />
-                    <span>Intermediate</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price Range
-                </label>
-                <p className="text-sm text-gray-500">$0 - $70</p>
-                <div className="bg-gray-200 h-2 rounded w-full mt-2"></div>
-              </div>
-
-              {/* Tags */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Tags
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  <span className="bg-gray-200 px-3 py-1 rounded text-sm">
-                    React
-                  </span>
-                  <span className="bg-gray-200 px-3 py-1 rounded text-sm">
-                    Node.js
-                  </span>
-                </div>
-              </div>
-
-              {/* Date Picker */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Last Updated
-                </label>
-                <input
-                  type="text"
-                  placeholder="Pick a date"
-                  className="w-full border rounded px-3 py-2"
-                  disabled
-                />
-              </div>
-
-              <button
-                className="w-full border mt-4 py-2 rounded bg-gray-50"
-                disabled
-              >
-                Reset Filters
-              </button>
-            </div>
-          </div>
+          <FilterSection
+            capacityRange={capacityRange}
+            handleCapacityChange={handleCapacityChange}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            instructorEmail={instructorEmail}
+            setInstructorEmail={setInstructorEmail}
+            Ordering={Ordering}
+            setOrdering={setOrdering}
+          />
 
           {/* Course Listings Section */}
           <div className="md:col-span-3">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-600">
-                Showing {dummyCourses.length} courses
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              {/* Showing Count */}
+              <p className="text-sm text-muted-foreground">
+                Showing <span className="font-medium">{classes.length}</span>{" "}
+                courses
               </p>
-              <select className="border px-3 py-2 rounded" disabled>
-                <option>Sort by</option>
-              </select>
+
+              {/* Search & Sort Controls */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                {/* Search Input */}
+                <div className="relative w-full sm:w-64">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search course name..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Sort Dropdown */}
+                <select
+                  className="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-100 rounded-lg px-4 py-2 text-sm shadow-sm transition duration-200 bg-white"
+                  value={Ordering}
+                  onChange={(e) => setOrdering(e.target.value)}
+                >
+                  <option value="">Sort by</option>
+                  <option value="schedule">Schedule: Low to High</option>
+                  <option value="-schedule">Schedule: High to Low</option>
+                  <option value="max_capacity">Capacity Ascending</option>
+                  <option value="-max_capacity">Capacity Descending</option>
+                </select>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
               {dummyCourses.map((course) => (
                 <div
                   key={course.id}
@@ -206,6 +189,11 @@ const courses = () => {
                 </div>
               ))}
             </div>
+            <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                handlePageChange={setCurrentPage}
+              />
           </div>
         </div>
       </div>

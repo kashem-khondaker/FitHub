@@ -48,6 +48,7 @@ const Courses = () => {
       const response = await ApiClient.get(`/fitness_classes/`);
       console.log(response.data);
       setCourses(response.data);
+      console.log(courses)
       hasFetched.current = true;
     } catch (error) {
       console.log(error);
