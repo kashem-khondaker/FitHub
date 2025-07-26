@@ -3,6 +3,7 @@ import CoursesHeroSection from "../../component/courses/CoursesHeroSection";
 import FilterSection from "../../component/courses/FilterSection";
 import useFetchClasses from "../../hooks/useFetchClasses";
 import Pagination from "../../component/courses/Pagination";
+import CoursesList from "../../component/courses/CoursesList";
 
 const courses = () => {
   const dummyCourses = [
@@ -92,6 +93,7 @@ const courses = () => {
           />
 
           {/* Course Listings Section */}
+          
           <div className="md:col-span-3">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
               {/* Showing Count */}
@@ -145,7 +147,7 @@ const courses = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
-              {dummyCourses.map((course) => (
+              {/* {dummyCourses.map((course) => (
                 <div
                   key={course.id}
                   className="bg-white rounded-lg shadow-md overflow-hidden"
@@ -187,8 +189,9 @@ const courses = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
+            <CoursesList classes={classes}/>
             <Pagination
                 totalPages={totalPages}
                 currentPage={currentPage}

@@ -1,72 +1,70 @@
 import React from "react";
+import { Clock, Calendar, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const CoursesList = () => {
+const CoursesList = ({ classes }) => {
   return (
-    <div className="space-y-6">
-      {filteredCourses.length > 0 ? (
-        filteredCourses.map((course) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {classes.length > 0 ? (
+        classes.map((classData) => (
           <div
-            key={course.id}
-            className="flex flex-col md:flex-row bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden animate-fade-in"
+            key={classData.id}
+            className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow animate-fade-in card-hover"
           >
             {/* Image Section */}
-            <div className="md:w-1/3 h-64 md:h-auto bg-gray-100">
+            <div className="relative h-56 bg-gray-200">
               <img
-                src={course.image}
-                alt={course.title}
+                src={classData.image}
+                alt={classData.name}
                 className="w-full h-full object-cover"
               />
             </div>
 
             {/* Content Section */}
-            <div className="p-6 flex flex-col justify-between md:w-2/3">
+            <div className="p-6">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-2xl font-semibold">{course.title}</h3>
-                  <span className="bg-gray-100 text-sm px-3 py-1 rounded-full">
-                    {course.level}
-                  </span>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {classData.name}
+                </h3>
 
                 <p className="text-gray-600 mb-4 line-clamp-2">
-                  {course.description}
+                  {classData.description}
                 </p>
 
-                <div className="flex flex-wrap text-sm text-gray-500 gap-4 mb-4">
+                <div className="flex flex-wrap items-center text-sm text-gray-500 mb-4 gap-4">
                   <div className="flex items-center">
                     <Clock className="h-4 w-4 mr-1" />
-                    {course.duration}
+                    {classData.duration} min
                   </div>
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-1" />
-                    {course.schedule.split(" - ")[0]}
+                    {new Date(classData.schedule).toLocaleString()}
                   </div>
                   <div className="flex items-center">
                     <Users className="h-4 w-4 mr-1" />
-                    {course.capacity} spots
+                    {classData.max_capacity} spots
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <div className="h-9 w-9 rounded-full bg-gray-200 flex items-center justify-center">
+                  <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
                     <span className="text-xs font-medium">
-                      {course.instructor
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                      {/* Instructor initials not available, show placeholder */}
+                      {classData.instructor?.profile?.profile_picture}
                     </span>
                   </div>
                   <span className="ml-2 text-sm font-medium">
-                    {course.instructor}
+                    {/* Instructor name not available, show ID or fallback */}
+                     {classData.instructor?.profile?.name}
                   </span>
                 </div>
 
-                <Link to={`/courses/${course.id}`}>
-                  <Button variant="outline" size="sm">
+                <Link to={`/courses/${classData.id}`}>
+                  <button className="text-sm px-3 py-1 border rounded">
                     View Details
-                  </Button>
+                  </button>
                 </Link>
               </div>
             </div>
