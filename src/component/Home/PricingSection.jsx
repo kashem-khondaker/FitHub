@@ -85,14 +85,14 @@ const PricingSection = () => {
 
   return (
     <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4 ">
+      <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Membership Plans</h2>
           <p className="text-gray-600">
             Choose the perfect membership plan for your fitness journey
           </p>
 
-          {/* Pricing Toggle */}
+          {/* Toggle Buttons */}
           <div className="flex items-center justify-center mt-8 space-x-3">
             <button
               className={`px-4 py-2 rounded-md ${
@@ -117,7 +117,7 @@ const PricingSection = () => {
           {plans[activeTab].map((plan, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 ${
+              className={`relative bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 h-full flex flex-col justify-between ${
                 plan.isPopular ? "transform hover:-translate-y-2" : "hover:-translate-y-1"
               } animate-fade-in`}
               style={{ animationDelay: `${index * 0.1}s`, animationFillMode: "both" }}
@@ -127,37 +127,41 @@ const PricingSection = () => {
                   Most Popular
                 </div>
               )}
-              <div className="p-8">
-                <h3 className="text-2xl font-bold mb-4">{plan.title}</h3>
-                <div className="flex items-baseline mb-6">
-                  <span className="text-4xl font-bold">${plan.price}</span>
-                  <span className="text-gray-600 ml-2">
-                    /{activeTab === "monthly" ? "month" : "year"}
-                  </span>
+              <div className="p-8 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold mb-4">{plan.title}</h3>
+                  <div className="flex items-baseline mb-6">
+                    <span className="text-4xl font-bold">${plan.price}</span>
+                    <span className="text-gray-600 ml-2">
+                      /{activeTab === "monthly" ? "month" : "year"}
+                    </span>
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center">
+                        <svg
+                          className="w-5 h-5 text-green-500 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 13l4 4L19 7"
+                          ></path>
+                        </svg>
+                        <span className="text-gray-600">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 13l4 4L19 7"
-                        ></path>
-                      </svg>
-                      <span className="text-gray-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+
+                {/* Fixed-position button at bottom of card */}
                 <Button
-                  className={`w-full ${
+                  className={`w-full mt-auto ${
                     plan.isPopular ? "bg-secondary hover:bg-secondary/90" : ""
                   }`}
                 >

@@ -66,7 +66,7 @@ const HomeHeroSection = () => {
               href="https://www.youtube.com/@KangkanDB/shorts" 
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 border-2 border-blue-500 text-blue-500 px-8 py-4 text-lg font-semibold rounded-full hover:bg-blue-500/10 transition-all"
+              className="group inline-flex items-center gap-2 border-2 border-orange-500 text-orange-500 px-8 py-4 text-lg font-semibold rounded-full hover:bg-orange-500/10 transition-all"
             >
               <svg
                 className="h-6 w-6 transition-transform group-hover:scale-110"
@@ -82,25 +82,25 @@ const HomeHeroSection = () => {
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 max-w-2xl mx-auto pt-12 text-white">
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-blue-400">
+              <div className="text-3xl md:text-4xl font-bold text-orange-400">
                 2500+
               </div>
               <div className="text-gray-300">Active Members</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-blue-400">
+              <div className="text-3xl md:text-4xl font-bold text-orange-400">
                 50+
               </div>
               <div className="text-gray-300">Expert Trainers</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-blue-400">
+              <div className="text-3xl md:text-4xl font-bold text-orange-400">
                 50+
               </div>
               <div className="text-gray-300">Fitness Classes</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-blue-400">
+              <div className="text-3xl md:text-4xl font-bold text-orange-400">
                 98%
               </div>
               <div className="text-gray-300">Success Rate</div>
