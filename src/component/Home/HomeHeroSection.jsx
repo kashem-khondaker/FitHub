@@ -62,7 +62,12 @@ const HomeHeroSection = () => {
               </svg>
             </Link>
 
-            <button className="group inline-flex items-center gap-2 border-2 border-blue-500 text-blue-500 px-8 py-4 text-lg font-semibold rounded-full hover:bg-blue-500/10 transition-all">
+            <a
+              href="https://www.youtube.com/@KangkanDB/shorts" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 border-2 border-blue-500 text-blue-500 px-8 py-4 text-lg font-semibold rounded-full hover:bg-blue-500/10 transition-all"
+            >
               <svg
                 className="h-6 w-6 transition-transform group-hover:scale-110"
                 fill="currentColor"
@@ -71,7 +76,7 @@ const HomeHeroSection = () => {
                 <path d="M5 3v18l15-9L5 3z" />
               </svg>
               Watch Our Story
-            </button>
+            </a>
           </div>
 
           {/* Stats */}
