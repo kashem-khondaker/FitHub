@@ -4,13 +4,14 @@ import { Calendar, Clock, Dumbbell, Star, Users } from "lucide-react";
 
 const CourseDetail = () => {
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState('description');
-  
+  const [activeTab, setActiveTab] = useState("description");
+
   // In a real app, you would fetch course data based on the ID
   const course = {
     id: Number(id),
     title: "HIIT Burn",
-    description: "High-intensity interval training designed to maximize calorie burn and improve cardiovascular fitness. This challenging workout alternates between intense bursts of exercise and short recovery periods, keeping your heart rate up and burning more fat in less time. Perfect for those looking to improve endurance, strength, and lose weight.",
+    description:
+      "High-intensity interval training designed to maximize calorie burn and improve cardiovascular fitness. This challenging workout alternates between intense bursts of exercise and short recovery periods, keeping your heart rate up and burning more fat in less time. Perfect for those looking to improve endurance, strength, and lose weight.",
     longDescription: `
       <p>High-Intensity Interval Training (HIIT) is a form of cardiovascular exercise that alternates short periods of intense exercise with less intense recovery periods. Our HIIT Burn class is designed to maximize calorie burn while improving your overall fitness level.</p>
       
@@ -35,8 +36,10 @@ const CourseDetail = () => {
       <p>This class is suitable for intermediate fitness levels. Modifications can be provided for those newer to HIIT. Come prepared with water and a towel, as you'll definitely be sweating!</p>
     `,
     instructor: "John Smith",
-    instructorBio: "John is a certified personal trainer with 10+ years of experience specializing in HIIT and strength training. He's passionate about helping clients achieve their fitness goals through efficient, effective workouts.",
-    image: "https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    instructorBio:
+      "John is a certified personal trainer with 10+ years of experience specializing in HIIT and strength training. He's passionate about helping clients achieve their fitness goals through efficient, effective workouts.",
+    image:
+      "https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
     category: "HIIT",
     level: "Intermediate",
     duration: "45 min",
@@ -50,7 +53,11 @@ const CourseDetail = () => {
       { day: "Monday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
       { day: "Wednesday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
       { day: "Friday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
-      { day: "Saturday", time: "10:00 AM - 10:45 AM", instructor: "Sarah Johnson" },
+      {
+        day: "Saturday",
+        time: "10:00 AM - 10:45 AM",
+        instructor: "Sarah Johnson",
+      },
     ],
     reviews: [
       {
@@ -58,53 +65,59 @@ const CourseDetail = () => {
         username: "FitnessFanatic",
         rating: 5,
         date: "2023-04-15",
-        comment: "Incredible workout! John really pushes you to your limit but in a motivating way. I've seen great results after just a few weeks of attending this class."
+        comment:
+          "Incredible workout! John really pushes you to your limit but in a motivating way. I've seen great results after just a few weeks of attending this class.",
       },
       {
         id: 2,
         username: "GymNewbie",
         rating: 4,
         date: "2023-03-22",
-        comment: "As someone new to HIIT, I was intimidated at first but John offers great modifications. Very challenging but rewarding!"
+        comment:
+          "As someone new to HIIT, I was intimidated at first but John offers great modifications. Very challenging but rewarding!",
       },
       {
         id: 3,
         username: "HealthyLifestyle",
         rating: 5,
         date: "2023-02-10",
-        comment: "This class is exactly what I needed to break through my fitness plateau. High energy, great music, and effective workouts."
+        comment:
+          "This class is exactly what I needed to break through my fitness plateau. High energy, great music, and effective workouts.",
       },
     ],
     relatedCourses: [
       {
         id: 2,
         title: "Strength Fundamentals",
-        image: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+        image:
+          "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
         category: "Strength",
         price: 20,
         oldPrice: 30,
         rating: 4.5,
-        reviews: 18
+        reviews: 18,
       },
       {
         id: 3,
         title: "Cardio Kickboxing",
-        image: "https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+        image:
+          "https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
         category: "Cardio",
         price: 18,
         oldPrice: 28,
         rating: 4.8,
-        reviews: 32
+        reviews: 32,
       },
       {
         id: 4,
         title: "Tabata Training",
-        image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+        image:
+          "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
         category: "HIIT",
         price: 22,
         oldPrice: 32,
         rating: 4.6,
-        reviews: 25
+        reviews: 25,
       },
     ],
   };
@@ -118,13 +131,9 @@ const CourseDetail = () => {
         );
       } else if (i - rating < 1) {
         // For half stars, not implemented here but could be added
-        stars.push(
-          <Star key={i} className="h-4 w-4 text-gray-300" />
-        );
+        stars.push(<Star key={i} className="h-4 w-4 text-gray-300" />);
       } else {
-        stars.push(
-          <Star key={i} className="h-4 w-4 text-gray-300" />
-        );
+        stars.push(<Star key={i} className="h-4 w-4 text-gray-300" />);
       }
     }
     return stars;
@@ -134,7 +143,7 @@ const CourseDetail = () => {
     <>
       <section className="bg-gray-100 py-12">
         {/* Hero Section */}
-        <div className="bg-blue-700 py-20">
+        <div className="bg-cover bg-center bg-no-repeat min-h-[40vh] sm:min-h-[60vh] flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')] py-20">
           <div className="container mx-auto px-4">
             <div className="text-center text-white">
               <span className="inline-block bg-white/20 text-white text-sm font-medium px-3 py-1 rounded-full mb-4">
@@ -155,115 +164,38 @@ const CourseDetail = () => {
         </div>
 
         <div className="container mx-auto px-4 mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Course Image and Info Section */}
-            <div className="md:col-span-1">
-              <div className="bg-white rounded-lg shadow p-4">
-                <div className="relative mb-4">
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                  <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
-                    Sale
-                  </span>
-                </div>
-
-                {/* Pricing */}
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <span className="text-2xl font-bold text-gray-800">
-                      ${course.price}
-                    </span>
-                    <span className="text-gray-500 line-through ml-2">
-                      ${course.oldPrice}
-                    </span>
-                  </div>
-                  <span className="text-sm bg-green-100 text-green-800 rounded-full px-3 py-1">Per class</span>
-                </div>
-
-                {/* Course Info */}
-                <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
-                  <div className="flex items-center">
-                    <Clock className="h-5 w-5 text-gray-500 mr-3" />
-                    <div>
-                      <p className="text-sm text-gray-500">Duration</p>
-                      <p className="font-medium">{course.duration}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="h-5 w-5 text-gray-500 mr-3" />
-                    <div>
-                      <p className="text-sm text-gray-500">Class Size</p>
-                      <p className="font-medium">Max {course.capacity} people</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Dumbbell className="h-5 w-5 text-gray-500 mr-3" />
-                    <div>
-                      <p className="text-sm text-gray-500">Level</p>
-                      <p className="font-medium">{course.level}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="space-y-3">
-                  <button className="w-full bg-blue-700 hover:bg-blue-800">
-                    Book a Class
-                  </button>
-                  <button variant="outline" className="w-full">
-                    Add to Favorites
-                  </button>
-                </div>
-
-                {/* Promotional Box */}
-                <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-blue-700 mb-2">Get More For Less</h4>
-                  <p className="text-sm text-gray-700 mb-3">
-                    Purchase a membership and save up to 30% on all classes.
-                  </p>
-                  <Link to="/pricing">
-                    <button variant="link" className="p-0 h-auto text-blue-700">
-                      View Membership Plans →
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-3 lg:flex gap-6  ">
             {/* Main Content Section */}
-            <div className="md:col-span-3">
+            <div className="md:col-span-4 ">
               {/* Tabs */}
               <div className="mb-6 border-b border-gray-200">
                 <div className="flex space-x-8">
                   <button
-                    onClick={() => setActiveTab('description')}
+                    onClick={() => setActiveTab("description")}
                     className={`pb-4 text-sm font-medium ${
-                      activeTab === 'description'
-                        ? 'border-b-2 border-blue-700 text-blue-700'
-                        : 'text-gray-500 hover:text-gray-700'
+                      activeTab === "description"
+                        ? "border-b-2 border-blue-700 text-blue-700"
+                        : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     Description
                   </button>
                   <button
-                    onClick={() => setActiveTab('schedule')}
+                    onClick={() => setActiveTab("schedule")}
                     className={`pb-4 text-sm font-medium ${
-                      activeTab === 'schedule'
-                        ? 'border-b-2 border-blue-700 text-blue-700'
-                        : 'text-gray-500 hover:text-gray-700'
+                      activeTab === "schedule"
+                        ? "border-b-2 border-blue-700 text-blue-700"
+                        : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     Schedule
                   </button>
                   <button
-                    onClick={() => setActiveTab('reviews')}
+                    onClick={() => setActiveTab("reviews")}
                     className={`pb-4 text-sm font-medium ${
-                      activeTab === 'reviews'
-                        ? 'border-b-2 border-blue-700 text-blue-700'
-                        : 'text-gray-500 hover:text-gray-700'
+                      activeTab === "reviews"
+                        ? "border-b-2 border-blue-700 text-blue-700"
+                        : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     Reviews ({course.reviews.length})
@@ -274,65 +206,93 @@ const CourseDetail = () => {
               {/* Tab Content */}
               <div className="mb-10">
                 {/* Description Tab */}
-                {activeTab === 'description' && (
+                {activeTab === "description" && (
                   <div className="animate-fade-in">
-                    <h2 className="text-2xl font-bold mb-4">About This Course</h2>
-                    <div 
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+                      About This Course
+                    </h2>
+                    <div
                       className="prose max-w-none text-gray-700 mb-8"
-                      dangerouslySetInnerHTML={{ __html: course.longDescription }}
+                      dangerouslySetInnerHTML={{
+                        __html: course.longDescription,
+                      }}
                     />
-                    
+
                     {/* Equipment Needed */}
-                    <h3 className="text-xl font-bold mb-3">Equipment Needed</h3>
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    <h3 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900">
+                      Equipment Needed
+                    </h3>
+                    <div className="flex flex-wrap gap-3 mb-8">
                       {course.equipment.map((item, index) => (
-                        <span 
-                          key={index} 
-                          className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-full"
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-4 py-1.5 bg-gray-100 text-gray-800 text-sm rounded-full shadow-sm"
                         >
-                          <Dumbbell className="h-4 w-4 mr-1 text-gray-500" />
+                          <Dumbbell className="h-4 w-4 mr-2 text-gray-500" />
                           {item}
                         </span>
                       ))}
                     </div>
-                    
+
                     {/* Instructor Bio */}
-                    <h3 className="text-xl font-bold mb-3">About the Instructor</h3>
-                    <div className="flex items-start space-x-4 mb-8">
-                      <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center text-xl font-bold">
-                        {course.instructor.split(' ').map(name => name[0]).join('')}
+                    <h3 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900">
+                      About the Instructor
+                    </h3>
+                    <div className="flex items-start gap-4 md:gap-6 p-4 md:p-6  rounded-2xl shadow-sm border border-blue-100 hover:border-blue-200 hover:shadow-md mb-10 ">
+                      {/* Avatar Circle */}
+                      <div className="flex-shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xl md:text-2xl font-bold shadow-inner">
+                        {course.instructor
+                          .split(" ")
+                          .map((name) => name[0])
+                          .join("")}
                       </div>
-                      <div>
-                        <h4 className="text-lg font-semibold">{course.instructor}</h4>
-                        <p className="text-gray-700">{course.instructorBio}</p>
+
+                      {/* Instructor Info */}
+                      <div className="flex flex-col justify-center">
+                        <h4 className="text-lg md:text-xl font-semibold text-gray-900 mb-1">
+                          {course.instructor}
+                        </h4>
+                        <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                          {course.instructorBio}
+                        </p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Schedule Tab */}
-                {activeTab === 'schedule' && (
+                {activeTab === "schedule" && (
                   <div className="animate-fade-in">
-                    <h2 className="text-2xl font-bold mb-6">Class Schedule</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">
+                      Class Schedule
+                    </h2>
                     <div className="grid gap-4">
                       {course.schedules.map((schedule, index) => (
-                        <div 
-                          key={index} 
-                          className="flex flex-col md:flex-row md:items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-sm transition-shadow bg-white"
+                        <div
+                          key={index}
+                          className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border border-gray-200 rounded-2xl hover:shadow-md transition-all bg-white"
                         >
-                          <div className="flex items-center mb-3 md:mb-0">
-                            <Calendar className="h-5 w-5 text-blue-700 mr-2" />
-                            <span className="font-medium">{schedule.day}</span>
+                          <div className="flex items-center gap-2 text-gray-800">
+                            <Calendar className="h-5 w-5 text-blue-700" />
+                            <span className="font-medium text-sm md:text-base">
+                              {schedule.day}
+                            </span>
                           </div>
-                          <div className="flex items-center mb-3 md:mb-0">
-                            <Clock className="h-5 w-5 text-gray-500 mr-2" />
-                            <span>{schedule.time}</span>
+                          <div className="flex items-center gap-2 text-gray-800">
+                            <Clock className="h-5 w-5 text-gray-600" />
+                            <span className="text-sm md:text-base">
+                              {schedule.time}
+                            </span>
                           </div>
-                          <div className="flex items-center mb-3 md:mb-0">
-                            <Users className="h-5 w-5 text-gray-500 mr-2" />
-                            <span>With {schedule.instructor}</span>
+                          <div className="flex items-center gap-2 text-gray-800">
+                            <Users className="h-5 w-5 text-gray-600" />
+                            <span className="text-sm md:text-base">
+                              With {schedule.instructor}
+                            </span>
                           </div>
-                          <button className="bg-blue-700 hover:bg-blue-800">Book Now</button>
+                          <button className="rounded-full px-6 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm md:text-base font-semibold shadow-md hover:shadow-lg transition-all">
+                            Book Now
+                          </button>
                         </div>
                       ))}
                     </div>
@@ -340,18 +300,27 @@ const CourseDetail = () => {
                 )}
 
                 {/* Reviews Tab */}
-                {activeTab === 'reviews' && (
+                {activeTab === "reviews" && (
                   <div className="animate-fade-in">
                     <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-2xl font-bold">Student Reviews</h2>
-                      <button className="bg-blue-700 hover:bg-blue-800">Write a Review</button>
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                        Student Reviews
+                      </h2>
+                      <button className="rounded-full px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm md:text-base font-semibold shadow-md hover:shadow-lg transition-all">
+                        Write a Review
+                      </button>
                     </div>
-                    
+
                     <div className="space-y-6 mb-8">
                       {course.reviews.map((review) => (
-                        <div key={review.id} className="border-b border-gray-200 pb-6 bg-white p-4 rounded-lg">
+                        <div
+                          key={review.id}
+                          className="border border-gray-200 pb-6 bg-white p-5 rounded-xl shadow-sm"
+                        >
                           <div className="flex justify-between mb-2">
-                            <h4 className="font-semibold">{review.username}</h4>
+                            <h4 className="font-semibold text-gray-900">
+                              {review.username}
+                            </h4>
                             <span className="text-gray-500 text-sm">
                               {new Date(review.date).toLocaleDateString()}
                             </span>
@@ -359,7 +328,9 @@ const CourseDetail = () => {
                           <div className="flex mb-2">
                             {renderStars(review.rating)}
                           </div>
-                          <p className="text-gray-700">{review.comment}</p>
+                          <p className="text-gray-700 text-sm md:text-base">
+                            {review.comment}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -370,7 +341,7 @@ const CourseDetail = () => {
               {/* Related Courses */}
               <div>
                 <h2 className="text-2xl font-bold mb-6">Similar Courses</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
                   {course.relatedCourses.map((relatedCourse) => (
                     <Link
                       key={relatedCourse.id}
@@ -378,10 +349,10 @@ const CourseDetail = () => {
                       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                     >
                       <div className="relative">
-                        <img 
-                          src={relatedCourse.image} 
-                          alt={relatedCourse.title} 
-                          className="w-full h-48 object-cover" 
+                        <img
+                          src={relatedCourse.image}
+                          alt={relatedCourse.title}
+                          className="w-full h-48 object-cover"
                         />
                         <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
                           Sale
@@ -415,6 +386,94 @@ const CourseDetail = () => {
                       </div>
                     </Link>
                   ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Course Image and Info Section */}
+            <div className="md:col-span-4">
+              <div className="sticky top-28">
+                {" "}
+                {/* Sticky Wrapper */}
+                <div className="bg-white rounded-lg shadow p-4">
+                  {/* Image */}
+                  <div className="relative mb-4">
+                    <img
+                      src={course.image}
+                      alt={course.title}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
+                      Sale
+                    </span>
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="text-2xl font-bold text-gray-800">
+                        ${course.price}
+                      </span>
+                      <span className="text-gray-500 line-through ml-2">
+                        ${course.oldPrice}
+                      </span>
+                    </div>
+                    <span className="text-sm bg-green-100 text-green-800 rounded-full px-3 py-1">
+                      Per class
+                    </span>
+                  </div>
+
+                  {/* Course Info */}
+                  <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
+                    <div className="flex items-center">
+                      <Clock className="h-5 w-5 text-gray-500 mr-3" />
+                      <div>
+                        <p className="text-sm text-gray-500">Duration</p>
+                        <p className="font-medium">{course.duration}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <Users className="h-5 w-5 text-gray-500 mr-3" />
+                      <div>
+                        <p className="text-sm text-gray-500">Class Size</p>
+                        <p className="font-medium">
+                          Max {course.capacity} people
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <Dumbbell className="h-5 w-5 text-gray-500 mr-3" />
+                      <div>
+                        <p className="text-sm text-gray-500">Level</p>
+                        <p className="font-medium">{course.level}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    <button className="w-full rounded-xl px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm md:text-base font-semibold shadow-sm hover:shadow-md transition-all">
+                      Book a Class
+                    </button>
+                    <button className="w-full rounded-xl px-5 py-2 text-green-600 bg-green-200 hover:text-green-900 text-sm md:text-base font-semibold shadow-sm hover:shadow-md transition-all">
+                      Add to Favorites
+                    </button>
+                  </div>
+
+                  {/* Promotional Box */}
+                  <div className="mt-6 bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-700 mb-2">
+                      Get More For Less
+                    </h4>
+                    <p className="text-sm text-gray-700 mb-3">
+                      Purchase a membership and save up to 30% on all classes.
+                    </p>
+                    <Link to="/pricing">
+                      <button className="p-0 h-auto text-blue-700">
+                        View Membership Plans →
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

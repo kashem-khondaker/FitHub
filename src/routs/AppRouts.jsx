@@ -15,7 +15,7 @@ const AppRouts = () => {
             <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/details" element={<CourseDetail />} />
+                <Route path="/courses/:classesId" element={<CourseDetail />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/register" element={<Registration />} />
                 <Route path="/login" element={<Login />} />
