@@ -8,6 +8,7 @@ import StatsSection from "../../component/Home/StatsSection";
 import BenefitsSection from "../../component/Home/BenefitsSection";
 import PricingSection from "../../component/Home/PricingSection";
 import FeaturedClasses from "../../component/Home/FeatuerdClasses";
+import FAQ from "../../component/Home/FAQ";
 
 const Home = () => {
   return (
@@ -33,7 +34,8 @@ const Home = () => {
 
       {/* Pricing section */}
       <PricingSection />
-
+      {/* faq section  */}
+      <FAQ />
       {/* CTA section */}
       <CTA />
     </div>
