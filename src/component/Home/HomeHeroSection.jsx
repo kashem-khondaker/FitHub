@@ -66,7 +66,7 @@ const HomeHeroSection = () => {
               href="https://www.youtube.com/@KangkanDB/shorts" 
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 border-2 border-orange-500 text-orange-500 px-8 py-4 text-lg font-semibold rounded-full hover:bg-orange-500/10 transition-all"
+              className="group inline-flex items-center gap-2 border-2 border-orange-400 text-orange-400 px-8 py-4 text-lg font-semibold rounded-full hover:bg-orange-500/10 transition-all"
             >
               <svg
                 className="h-6 w-6 transition-transform group-hover:scale-110"

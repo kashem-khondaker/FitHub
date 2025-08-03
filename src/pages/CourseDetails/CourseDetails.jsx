@@ -1,371 +1,454 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Calendar, Clock, Dumbbell, Star, Users } from "lucide-react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import CourseHero from "../../component/courseDetails/CourseHero";
+
+const dummySchedules = [
+  { day: "Monday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
+  { day: "Wednesday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
+  { day: "Friday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
+  { day: "Saturday", time: "10:00 AM - 10:45 AM", instructor: "Sarah Johnson" },
+];
+
+const dummyReviews = [
+  {
+    id: 1,
+    username: "FitnessFanatic",
+    rating: 5,
+    date: "2023-04-15",
+    comment:
+      "Incredible workout! John really pushes you to your limit but in a motivating way. I've seen great results after just a few weeks of attending this class.",
+  },
+  {
+    id: 2,
+    username: "GymNewbie",
+    rating: 4,
+    date: "2023-03-22",
+    comment:
+      "As someone new to HIIT, I was intimidated at first but John offers great modifications. Very challenging but rewarding!",
+  },
+  {
+    id: 3,
+    username: "HealthyLifestyle",
+    rating: 5,
+    date: "2023-02-10",
+    comment:
+      "This class is exactly what I needed to break through my fitness plateau. High energy, great music, and effective workouts.",
+  },
+];
+
+const dummyRelatedCourses = [
+  {
+    id: 2,
+    title: "Strength Fundamentals",
+    image:
+      "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    category: "Strength",
+    price: 20,
+    oldPrice: 30,
+    rating: 4.5,
+    reviews: 18,
+  },
+  {
+    id: 3,
+    title: "Cardio Kickboxing",
+    image:
+      "https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    category: "Cardio",
+    price: 18,
+    oldPrice: 28,
+    rating: 4.8,
+    reviews: 32,
+  },
+  {
+    id: 4,
+    title: "Tabata Training",
+    image:
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    category: "HIIT",
+    price: 22,
+    oldPrice: 32,
+    rating: 4.6,
+    reviews: 25,
+  },
+];
 
 const CourseDetail = () => {
-  const { id } = useParams();
+  const { classesId } = useParams();
+  const [course, setCourse] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("description");
 
-  // In a real app, you would fetch course data based on the ID
-  const course = {
-    id: Number(id),
-    title: "HIIT Burn",
-    description:
-      "High-intensity interval training designed to maximize calorie burn and improve cardiovascular fitness. This challenging workout alternates between intense bursts of exercise and short recovery periods, keeping your heart rate up and burning more fat in less time. Perfect for those looking to improve endurance, strength, and lose weight.",
-    longDescription: `
-      <p>High-Intensity Interval Training (HIIT) is a form of cardiovascular exercise that alternates short periods of intense exercise with less intense recovery periods. Our HIIT Burn class is designed to maximize calorie burn while improving your overall fitness level.</p>
-      
-      <p>During this 45-minute class, you'll experience:</p>
-      <ul>
-        <li>Dynamic warm-up to prepare your body</li>
-        <li>Multiple intervals of high-intensity exercises</li>
-        <li>Strength and cardio combinations</li>
-        <li>Core stabilization work</li>
-        <li>Flexibility and mobility cool down</li>
-      </ul>
-      
-      <p>HIIT workouts provide the following benefits:</p>
-      <ul>
-        <li>Burn more calories in less time</li>
-        <li>Increase metabolic rate for hours after exercise</li>
-        <li>Improve oxygen consumption</li>
-        <li>Reduce heart rate and blood pressure</li>
-        <li>Improve insulin sensitivity</li>
-      </ul>
-      
-      <p>This class is suitable for intermediate fitness levels. Modifications can be provided for those newer to HIIT. Come prepared with water and a towel, as you'll definitely be sweating!</p>
-    `,
-    instructor: "John Smith",
-    instructorBio:
-      "John is a certified personal trainer with 10+ years of experience specializing in HIIT and strength training. He's passionate about helping clients achieve their fitness goals through efficient, effective workouts.",
-    image:
-      "https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    category: "HIIT",
-    level: "Intermediate",
-    duration: "45 min",
-    capacity: 20,
-    equipment: ["Exercise mat", "Dumbbells", "Kettlebells", "Jump rope"],
-    avgRating: 4.7,
-    totalReviews: 24,
-    price: 15,
-    oldPrice: 25,
-    schedules: [
-      { day: "Monday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
-      { day: "Wednesday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
-      { day: "Friday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
-      {
-        day: "Saturday",
-        time: "10:00 AM - 10:45 AM",
-        instructor: "Sarah Johnson",
-      },
-    ],
-    reviews: [
-      {
-        id: 1,
-        username: "FitnessFanatic",
-        rating: 5,
-        date: "2023-04-15",
-        comment:
-          "Incredible workout! John really pushes you to your limit but in a motivating way. I've seen great results after just a few weeks of attending this class.",
-      },
-      {
-        id: 2,
-        username: "GymNewbie",
-        rating: 4,
-        date: "2023-03-22",
-        comment:
-          "As someone new to HIIT, I was intimidated at first but John offers great modifications. Very challenging but rewarding!",
-      },
-      {
-        id: 3,
-        username: "HealthyLifestyle",
-        rating: 5,
-        date: "2023-02-10",
-        comment:
-          "This class is exactly what I needed to break through my fitness plateau. High energy, great music, and effective workouts.",
-      },
-    ],
-    relatedCourses: [
-      {
-        id: 2,
-        title: "Strength Fundamentals",
-        image:
-          "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        category: "Strength",
-        price: 20,
-        oldPrice: 30,
-        rating: 4.5,
-        reviews: 18,
-      },
-      {
-        id: 3,
-        title: "Cardio Kickboxing",
-        image:
-          "https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        category: "Cardio",
-        price: 18,
-        oldPrice: 28,
-        rating: 4.8,
-        reviews: 32,
-      },
-      {
-        id: 4,
-        title: "Tabata Training",
-        image:
-          "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        category: "HIIT",
-        price: 22,
-        oldPrice: 32,
-        rating: 4.6,
-        reviews: 25,
-      },
-    ],
-  };
+  useEffect(() => {
+    const fetchCourse = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get(
+          `http://127.0.0.1:8000/fitness_classes/${classesId}/`
+        );
+        const data = res.data;
 
-  const renderStars = (rating) => {
+        // Add proper fallbacks for all required fields
+        const mappedCourse = {
+          id: data.id || classesId,
+          title: data.name || "Unnamed Class",
+          description: data.description || "No description available",
+          longDescription:
+            data.long_description ||
+            data.description ||
+            "No detailed description available",
+          image:
+            data.image ||
+            "https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+          duration: data.duration
+            ? `${data.duration} min`
+            : "Duration not specified",
+          capacity: data.max_capacity || 0,
+          level: data.level || "All Levels",
+          price: Number(data.price) || 0,
+          oldPrice: Number(data.old_price) || 0,
+          avgRating: 4.5, // Default rating if not available
+          totalReviews: dummyReviews.length, // Default to dummy reviews count
+          instructor:
+            (data.instructor?.first_name || "Unknown") +
+            " " +
+            (data.instructor?.last_name || "Instructor"),
+          instructorBio: data.instructor?.profile?.bio || "No bio available",
+          equipment: data.equipment_needed || ["None required"], // Fallback equipment
+          schedules:
+            data.schedules && data.schedules.length > 0
+              ? data.schedules.map((sch) => ({
+                  day: sch.day || "TBD",
+                  time: sch.time || "TBD",
+                  instructor:
+                    sch.instructor ||
+                    (data.instructor?.first_name || "") +
+                      " " +
+                      (data.instructor?.last_name || ""),
+                }))
+              : dummySchedules,
+          reviews: dummyReviews,
+          relatedCourses: dummyRelatedCourses,
+          category: data.category || "Fitness", // Added category fallback
+        };
+
+        setCourse(mappedCourse);
+        setIsLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load course data");
+
+        // Set a fallback course with dummy data if API fails
+        setCourse({
+          id: classesId,
+          title: "Sample Fitness Class",
+          description: "This is a sample fitness class description",
+          longDescription:
+            "<p>This is a detailed description of the sample fitness class. The API failed to load real data.</p>",
+          image:
+            "https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+          duration: "45 min",
+          capacity: 20,
+          level: "Intermediate",
+          price: 25,
+          oldPrice: 35,
+          avgRating: 4.5,
+          totalReviews: dummyReviews.length,
+          instructor: "John Doe",
+          instructorBio:
+            "Certified fitness instructor with 10 years of experience",
+          equipment: ["Yoga mat", "Dumbbells", "Water bottle"],
+          schedules: dummySchedules,
+          reviews: dummyReviews,
+          relatedCourses: dummyRelatedCourses,
+          category: "HIIT",
+        });
+
+        setIsLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [classesId]);
+
+  const renderStars = (rating = 0) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
-      if (i <= rating) {
-        stars.push(
-          <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-        );
-      } else if (i - rating < 1) {
-        // For half stars, not implemented here but could be added
-        stars.push(<Star key={i} className="h-4 w-4 text-gray-300" />);
-      } else {
-        stars.push(<Star key={i} className="h-4 w-4 text-gray-300" />);
-      }
+      stars.push(
+        <Star
+          key={i}
+          className={`h-4 w-4 ${
+            i <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+          }`}
+        />
+      );
     }
     return stars;
   };
 
+  if (isLoading) {
+    return <div className="text-center py-10 text-lg">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500 py-10">{error}</div>;
+  }
+
+  if (!course) {
+    return <div className="text-center py-10">No course data found.</div>;
+  }
+
   return (
-    <>
-      <section className="bg-gray-100 py-12">
-        {/* Hero Section */}
-        <div className="bg-cover bg-center bg-no-repeat min-h-[40vh] sm:min-h-[60vh] flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')] py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center text-white">
-              <span className="inline-block bg-white/20 text-white text-sm font-medium px-3 py-1 rounded-full mb-4">
-                {course.category}
-              </span>
-              <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
-              <div className="flex items-center justify-center space-x-1 text-yellow-400 mb-4">
-                {renderStars(course.avgRating)}
-                <span className="ml-2 text-white">
-                  ({course.avgRating}) • {course.totalReviews} reviews
-                </span>
-              </div>
-              <p className="text-lg max-w-2xl mx-auto">
-                Instructor: {course.instructor} • Level: {course.level}
-              </p>
-            </div>
-          </div>
+    <section className="bg-gray-100 py-12">
+      {/* Hero Section - Improved from first design */}
+      <div
+        className="relative bg-cover bg-center bg-no-repeat min-h-[50vh] flex items-center justify-center py-20"
+        style={{ backgroundImage: `url(${course.image})` }}
+      >
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="container mx-auto px-4 relative z-10 text-center text-white">
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-block bg-white/20 text-white text-sm font-medium px-3 py-1 rounded-full mb-4"
+          >
+            {course.category}
+          </motion.span>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl font-bold mb-4"
+          >
+            {course.title}
+          </motion.h1>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center justify-center space-x-1 text-yellow-400 mb-4"
+          >
+            {renderStars(course.avgRating)}
+            <span className="ml-2 text-white">
+              ({course.avgRating}) • {course.totalReviews} reviews
+            </span>
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-lg max-w-2xl mx-auto"
+          >
+            Instructor: {course.instructor} • Level: {course.level}
+          </motion.p>
         </div>
+      </div>
+      {/* <CourseHero course={course} renderStars={renderStars} /> */}
 
-        <div className="container mx-auto px-4 mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-3 lg:flex gap-6  ">
-            {/* Main Content Section */}
-            <div className="md:col-span-4 ">
-              {/* Tabs */}
-              <div className="mb-6 border-b border-gray-200">
-                <div className="flex space-x-8">
+      {/* Main Content - Restructured to match first design */}
+      <div className="container mx-auto px-4 mt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2">
+            {/* Tabs - Improved styling */}
+            <div className="mb-8 border-b border-gray-200">
+              <div className="flex space-x-8">
+                {["description", "schedule", "reviews"].map((tab) => (
                   <button
-                    onClick={() => setActiveTab("description")}
-                    className={`pb-4 text-sm font-medium ${
-                      activeTab === "description"
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`pb-4 px-1 font-medium transition-colors ${
+                      activeTab === tab
                         ? "border-b-2 border-blue-700 text-blue-700"
                         : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
-                    Description
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {tab === "reviews" && ` (${course.reviews.length})`}
                   </button>
-                  <button
-                    onClick={() => setActiveTab("schedule")}
-                    className={`pb-4 text-sm font-medium ${
-                      activeTab === "schedule"
-                        ? "border-b-2 border-blue-700 text-blue-700"
-                        : "text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Schedule
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("reviews")}
-                    className={`pb-4 text-sm font-medium ${
-                      activeTab === "reviews"
-                        ? "border-b-2 border-blue-700 text-blue-700"
-                        : "text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Reviews ({course.reviews.length})
-                  </button>
-                </div>
+                ))}
               </div>
+            </div>
 
-              {/* Tab Content */}
-              <div className="mb-10">
-                {/* Description Tab */}
-                {activeTab === "description" && (
-                  <div className="animate-fade-in">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                      About This Course
-                    </h2>
-                    <div
-                      className="prose max-w-none text-gray-700 mb-8"
-                      dangerouslySetInnerHTML={{
-                        __html: course.longDescription,
-                      }}
-                    />
+            {/* Tab Content with Framer Motion */}
+            <div className="mb-12">
+              {/* Description Tab */}
+              {activeTab === "description" && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h2 className="text-3xl font-bold mb-6 text-gray-900">
+                    About This Course
+                  </h2>
+                  <div
+                    className="prose max-w-none text-gray-700 mb-8"
+                    dangerouslySetInnerHTML={{ __html: course.longDescription }}
+                  />
 
-                    {/* Equipment Needed */}
-                    <h3 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900">
-                      Equipment Needed
-                    </h3>
-                    <div className="flex flex-wrap gap-3 mb-8">
-                      {course.equipment.map((item, index) => (
-                        <span
-                          key={index}
-                          className="inline-flex items-center px-4 py-1.5 bg-gray-100 text-gray-800 text-sm rounded-full shadow-sm"
-                        >
-                          <Dumbbell className="h-4 w-4 mr-2 text-gray-500" />
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Instructor Bio */}
-                    <h3 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900">
-                      About the Instructor
-                    </h3>
-                    <div className="flex items-start gap-4 md:gap-6 p-4 md:p-6  rounded-2xl shadow-sm border border-blue-100 hover:border-blue-200 hover:shadow-md mb-10 ">
-                      {/* Avatar Circle */}
-                      <div className="flex-shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xl md:text-2xl font-bold shadow-inner">
-                        {course.instructor
-                          .split(" ")
-                          .map((name) => name[0])
-                          .join("")}
-                      </div>
-
-                      {/* Instructor Info */}
-                      <div className="flex flex-col justify-center">
-                        <h4 className="text-lg md:text-xl font-semibold text-gray-900 mb-1">
-                          {course.instructor}
-                        </h4>
-                        <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-                          {course.instructorBio}
-                        </p>
-                      </div>
-                    </div>
+                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                    Equipment Needed
+                  </h3>
+                  <div className="flex flex-wrap gap-3 mb-8">
+                    {course.equipment.map((item, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="inline-flex items-center px-4 py-1.5 bg-gray-100 text-gray-800 text-sm rounded-full shadow-sm"
+                      >
+                        <Dumbbell className="h-4 w-4 mr-2 text-gray-500" />
+                        {item}
+                      </motion.span>
+                    ))}
                   </div>
-                )}
 
-                {/* Schedule Tab */}
-                {activeTab === "schedule" && (
-                  <div className="animate-fade-in">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">
-                      Class Schedule
-                    </h2>
-                    <div className="grid gap-4">
-                      {course.schedules.map((schedule, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 border border-gray-200 rounded-2xl hover:shadow-md transition-all bg-white"
-                        >
-                          <div className="flex items-center gap-2 text-gray-800">
-                            <Calendar className="h-5 w-5 text-blue-700" />
-                            <span className="font-medium text-sm md:text-base">
-                              {schedule.day}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 text-gray-800">
-                            <Clock className="h-5 w-5 text-gray-600" />
-                            <span className="text-sm md:text-base">
-                              {schedule.time}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 text-gray-800">
-                            <Users className="h-5 w-5 text-gray-600" />
-                            <span className="text-sm md:text-base">
-                              With {schedule.instructor}
-                            </span>
-                          </div>
-                          <button className="rounded-full px-6 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm md:text-base font-semibold shadow-md hover:shadow-lg transition-all">
-                            Book Now
-                          </button>
+                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                    About the Instructor
+                  </h3>
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="flex items-start gap-6 p-6 rounded-2xl shadow-sm border border-blue-100 hover:border-blue-200 hover:shadow-md mb-10 transition-all"
+                  >
+                    <div className="flex-shrink-0 h-20 w-20 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-2xl font-bold shadow-inner">
+                      {course.instructor
+                        .split(" ")
+                        .map((name) => name[0])
+                        .join("")}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-semibold text-gray-900 mb-1">
+                        {course.instructor}
+                      </h4>
+                      <p className="text-gray-600 leading-relaxed">
+                        {course.instructorBio}
+                      </p>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {/* Schedule Tab */}
+              {activeTab === "schedule" && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h2 className="text-3xl font-bold mb-6 text-gray-900">
+                    Class Schedule
+                  </h2>
+                  <div className="space-y-4">
+                    {course.schedules.map((schedule, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        whileHover={{ scale: 1.01 }}
+                        className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 border border-gray-200 rounded-2xl bg-white hover:shadow-md transition-all"
+                      >
+                        <div className="flex items-center gap-2 text-gray-800">
+                          <Calendar className="h-5 w-5 text-blue-700" />
+                          <span className="font-medium">{schedule.day}</span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Reviews Tab */}
-                {activeTab === "reviews" && (
-                  <div className="animate-fade-in">
-                    <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                        Student Reviews
-                      </h2>
-                      <button className="rounded-full px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm md:text-base font-semibold shadow-md hover:shadow-lg transition-all">
-                        Write a Review
-                      </button>
-                    </div>
-
-                    <div className="space-y-6 mb-8">
-                      {course.reviews.map((review) => (
-                        <div
-                          key={review.id}
-                          className="border border-gray-200 pb-6 bg-white p-5 rounded-xl shadow-sm"
-                        >
-                          <div className="flex justify-between mb-2">
-                            <h4 className="font-semibold text-gray-900">
-                              {review.username}
-                            </h4>
-                            <span className="text-gray-500 text-sm">
-                              {new Date(review.date).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex mb-2">
-                            {renderStars(review.rating)}
-                          </div>
-                          <p className="text-gray-700 text-sm md:text-base">
-                            {review.comment}
-                          </p>
+                        <div className="flex items-center gap-2 text-gray-800">
+                          <Clock className="h-5 w-5 text-gray-600" />
+                          <span>{schedule.time}</span>
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex items-center gap-2 text-gray-800">
+                          <Users className="h-5 w-5 text-gray-600" />
+                          <span>With {schedule.instructor}</span>
+                        </div>
+                        <button className="rounded-full px-6 py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow-md hover:shadow-lg transition-all">
+                          Book Now
+                        </button>
+                      </motion.div>
+                    ))}
                   </div>
-                )}
-              </div>
+                </motion.div>
+              )}
 
-              {/* Related Courses */}
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Similar Courses</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
-                  {course.relatedCourses.map((relatedCourse) => (
-                    <Link
-                      key={relatedCourse.id}
-                      to={`/courses/${relatedCourse.id}`}
-                      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              {/* Reviews Tab */}
+              {activeTab === "reviews" && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-3xl font-bold text-gray-900">
+                      Student Reviews
+                    </h2>
+                    <button className="rounded-full px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow-md hover:shadow-lg transition-all">
+                      Write a Review
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {course.reviews.map((review, i) => (
+                      <motion.div
+                        key={review.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="border border-gray-200 p-6 bg-white rounded-xl shadow-sm"
+                      >
+                        <div className="flex justify-between mb-3">
+                          <h4 className="font-semibold text-gray-900">
+                            {review.username}
+                          </h4>
+                          <span className="text-gray-500 text-sm">
+                            {new Date(review.date).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="flex mb-3">
+                          {renderStars(review.rating)}
+                        </div>
+                        <p className="text-gray-700">{review.comment}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Related Courses - Improved from first design */}
+            <div>
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">
+                Similar Courses
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {course.relatedCourses.map((relatedCourse) => (
+                  <Link
+                    key={relatedCourse.id}
+                    to={`/courses/${relatedCourse.id}`}
+                    className="group"
+                  >
+                    <motion.div
+                      whileHover={{ y: -5 }}
+                      className="bg-white rounded-lg shadow-md overflow-hidden group-hover:shadow-lg transition-all"
                     >
-                      <div className="relative">
+                      <div className="relative h-48">
                         <img
                           src={relatedCourse.image}
                           alt={relatedCourse.title}
-                          className="w-full h-48 object-cover"
+                          className="w-full h-full object-cover"
                         />
                         <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
                           Sale
                         </span>
-                        <div className="absolute top-2 left-2 bg-white py-1 px-2 rounded-full text-xs">
-                          {relatedCourse.category}
-                        </div>
                       </div>
                       <div className="p-4">
-                        <h3 className="text-lg font-bold text-gray-800 line-clamp-2 mb-2">
+                        <h3 className="text-lg font-bold text-gray-800 mb-2">
                           {relatedCourse.title}
                         </h3>
-                        <div className="flex items-center justify-between">
+                        <div className="flex justify-between items-center">
                           <div>
                             <span className="text-gray-700 font-bold">
                               ${relatedCourse.price}
@@ -378,109 +461,104 @@ const CourseDetail = () => {
                             <span className="text-yellow-500 mr-1">
                               {relatedCourse.rating}
                             </span>
-                            <span className="text-gray-500">
+                            <span className="text-gray-500 text-sm">
                               ({relatedCourse.reviews})
                             </span>
                           </div>
                         </div>
                       </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Course Image and Info Section */}
-            <div className="md:col-span-4">
-              <div className="sticky top-28">
-                {" "}
-                {/* Sticky Wrapper */}
-                <div className="bg-white rounded-lg shadow p-4">
-                  {/* Image */}
-                  <div className="relative mb-4">
-                    <img
-                      src={course.image}
-                      alt={course.title}
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                    <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
-                      Sale
-                    </span>
-                  </div>
-
-                  {/* Pricing */}
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <span className="text-2xl font-bold text-gray-800">
-                        ${course.price}
-                      </span>
-                      <span className="text-gray-500 line-through ml-2">
-                        ${course.oldPrice}
-                      </span>
-                    </div>
-                    <span className="text-sm bg-green-100 text-green-800 rounded-full px-3 py-1">
-                      Per class
-                    </span>
-                  </div>
-
-                  {/* Course Info */}
-                  <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
-                    <div className="flex items-center">
-                      <Clock className="h-5 w-5 text-gray-500 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-500">Duration</p>
-                        <p className="font-medium">{course.duration}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="h-5 w-5 text-gray-500 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-500">Class Size</p>
-                        <p className="font-medium">
-                          Max {course.capacity} people
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Dumbbell className="h-5 w-5 text-gray-500 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-500">Level</p>
-                        <p className="font-medium">{course.level}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="space-y-3">
-                    <button className="w-full rounded-xl px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm md:text-base font-semibold shadow-sm hover:shadow-md transition-all">
-                      Book a Class
-                    </button>
-                    <button className="w-full rounded-xl px-5 py-2 text-green-600 bg-green-200 hover:text-green-900 text-sm md:text-base font-semibold shadow-sm hover:shadow-md transition-all">
-                      Add to Favorites
-                    </button>
-                  </div>
-
-                  {/* Promotional Box */}
-                  <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-blue-700 mb-2">
-                      Get More For Less
-                    </h4>
-                    <p className="text-sm text-gray-700 mb-3">
-                      Purchase a membership and save up to 30% on all classes.
-                    </p>
-                    <Link to="/pricing">
-                      <button className="p-0 h-auto text-blue-700">
-                        View Membership Plans →
-                      </button>
-                    </Link>
-                  </div>
-                </div>
+                    </motion.div>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
+
+          {/* Right Column - Course Info (Sticky) */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="sticky top-28 bg-white rounded-lg shadow-lg p-6"
+            >
+              <div className="relative mb-6">
+                <img
+                  src={course.image}
+                  alt={course.title}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
+                  Sale
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <span className="text-2xl font-bold text-gray-800">
+                    ${course.price}
+                  </span>
+                  <span className="text-gray-500 line-through ml-2">
+                    ${course.oldPrice}
+                  </span>
+                </div>
+                <span className="text-sm bg-green-100 text-green-800 rounded-full px-3 py-1">
+                  Per class
+                </span>
+              </div>
+
+              <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
+                <div className="flex items-center">
+                  <Clock className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-500">Duration</p>
+                    <p className="font-medium">{course.duration}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <Users className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-500">Class Size</p>
+                    <p className="font-medium">Max {course.capacity} people</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <Dumbbell className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-500">Level</p>
+                    <p className="font-medium">{course.level}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <button className="w-full rounded-xl px-5 py-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow-md hover:shadow-lg transition-all">
+                  Book a Class
+                </button>
+                <button className="w-full rounded-xl px-5 py-3 text-green-600 bg-green-100 hover:bg-green-200 font-semibold shadow-sm hover:shadow-md transition-all">
+                  Add to Favorites
+                </button>
+              </div>
+
+              <div className="mt-6 bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-700 mb-2">
+                  Get More For Less
+                </h4>
+                <p className="text-sm text-gray-700 mb-3">
+                  Purchase a membership and save up to 30% on all classes.
+                </p>
+                <Link
+                  to="/pricing"
+                  className="text-blue-700 hover:text-blue-900 font-medium text-sm"
+                >
+                  View Membership Plans →
+                </Link>
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 
