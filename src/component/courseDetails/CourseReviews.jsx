@@ -4,6 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "react-router";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useReviews } from "../../hooks/useReviews";
+import { RiMore2Line } from "react-icons/ri";
+import { div } from "framer-motion/client";
+import { FaRegPenToSquare } from "react-icons/fa6";
+import { BsTrash } from "react-icons/bs";
 
 const StarRating = ({ rating, onChange, readonly = false }) => {
   return (
@@ -26,6 +30,8 @@ const StarRating = ({ rating, onChange, readonly = false }) => {
 
 const CourseReviews = () => {
   const { classesId } = useParams();
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [editingReview, setEditingReview] = useState(null);
   const {
     reviews,
     isLoading,
@@ -36,6 +42,8 @@ const CourseReviews = () => {
     handleNext,
     handlePrevious,
     createReview,
+    updateReview,
+    deleteReview,
   } = useReviews(classesId);
 
   const [showForm, setShowForm] = useState(false);
@@ -58,6 +66,35 @@ const CourseReviews = () => {
     setShowForm(false);
     // Refresh reviews after submission
     fetchReviews();
+  };
+
+  // Handle Edit functionality
+  const handleEdit = (review) => {
+    try {
+      setEditingReview(review);
+      updateReview(review);
+      setFormData({
+        text: review.comment || review.text,
+        rating: review.rating,
+      });
+      setShowForm(true);
+      setActiveMenu(null);
+    } catch (error) {
+      console.log("Update review error: ", error);
+    }
+  };
+
+  // Handle delete Functionality
+  const handleDelete = async (reviewId) => {
+    if (window.confirm("Are you sure you want to delete this review?")) {
+      try {
+        await deleteReview(reviewId);
+        fetchReviews();
+      } catch (error) {
+        console.error("Delete error:", error);
+      }
+    }
+    setActiveMenu(null);
   };
 
   // Calculate average rating
@@ -106,7 +143,7 @@ const CourseReviews = () => {
           Write a Review
         </button>
       </div>
-      
+
       {/*Rating Distribution Section */}
       <div className="bg-gray-50 p-6 rounded-lg mb-8">
         <h3 className="text-lg font-semibold mb-4">Rating Distribution</h3>
@@ -230,6 +267,7 @@ const CourseReviews = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
       {/* Reviews Count and Pagination Info */}
       {reviews.length > 0 && (
         <div className="flex justify-between items-center mb-6">
@@ -280,8 +318,9 @@ const CourseReviews = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="border border-gray-200 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              className="border border-gray-200 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow relative"
             >
+              {/* 3-dot Menu and Actions */}
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h4 className="font-semibold text-gray-900 text-lg">
@@ -294,13 +333,59 @@ const CourseReviews = () => {
                     </span>
                   </div>
                 </div>
-                <span className="text-gray-500 text-sm">
-                  {new Date(review.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
+
+                <div className="flex items-center gap-3">
+                  {/* Date Display - Always visible */}
+                  <span className="text-gray-500 text-sm">
+                    {new Date(review.created_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+
+                  {/* 3-dot Menu Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() =>
+                        setActiveMenu(
+                          activeMenu === review.id ? null : review.id
+                        )
+                      }
+                      className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                    >
+                      <RiMore2Line size={18} className="text-gray-500" />
+                    </button>
+
+                    {/* Edit/Delete Icons - Show when active */}
+                    {activeMenu === review.id && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex gap-2 z-10"
+                      >
+                        {/* Edit Button */}
+                        <button
+                          onClick={() => handleEdit(review)}
+                          className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-blue-600"
+                          title="Edit review"
+                        >
+                          <FaRegPenToSquare size={16} />
+                        </button>
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDelete(review.id)}
+                          className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-600"
+                          title="Delete review"
+                        >
+                          <BsTrash size={16} />
+                        </button>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <p className="text-gray-700 leading-relaxed">
