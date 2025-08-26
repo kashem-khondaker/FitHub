@@ -10,6 +10,7 @@ import CourseSchedule from "../../component/courseDetails/CourseSchedule";
 import CourseReviews from "../../component/courseDetails/CourseReviews";
 import RelatedCourses from "../../component/courseDetails/RelatedCourses";
 import CourseSidebar from "../../component/courseDetails/CourseSidebar";
+import ApiClient from "../../services/ApiClient";
 
 const dummySchedules = [
   { day: "Monday", time: "6:00 PM - 6:45 PM", instructor: "John Smith" },
@@ -207,17 +208,17 @@ const CourseDetail = () => {
     return <div className="text-center py-10">No course data found.</div>;
   }
 
-return (
+  return (
     <section className="bg-gray-100 py-12">
       <CourseHero course={course} renderStars={renderStars} />
-      
+
       <div className="container mx-auto px-4 mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <CourseTabs
-              activeTab={activeTab} 
-              setActiveTab={setActiveTab} 
-              reviewsCount={course.reviews.length} 
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              reviewsCount={course.reviews.length}
             />
 
             <div className="mb-12">
@@ -228,7 +229,9 @@ return (
                 <CourseSchedule schedules={course.schedules} />
               )}
               {activeTab === "reviews" && (
-                <CourseReviews reviews={course.reviews} renderStars={renderStars} />
+                <CourseReviews
+                  renderStars={renderStars}
+                />
               )}
             </div>
 
